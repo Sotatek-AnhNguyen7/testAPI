@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+<meta charset="utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <style>
+        .text {
+            text-anchor: center;
+        }
+    </style>
+    <button id="show-nhan-vien"> hiện user </button>
+    <div class="row">
+        <div class="col-sm-2 user">Users</div>
+        <div class="col-sm-2 album">Albums</div>
+        <div class="col-sm-2 cmt">Comments</div>
+        <div class="col-sm-2 post">Posts</div>
+        <div class="col-sm-2 photo">Photos</div>
+        <div class="col-sm-2 todo">Todos</div>
+    </div>
+    <script type="text/javascript" language="javascript">
+        // $(document).ready(function() {
+        //     $("#show-nhan-vien").click(function(event) {
+        //         $.getJSON('https://jsonplaceholder.typicode.com/todos', function(jd) {
+        //             $('#nhanVien').html('<p> userId: ' + jd.userId + '</p>');
+        //             $('#nhanVien').append('<p>title : ' + jd.id + '</p>');
+        //             $('#nhanVien').append('<p> completed: ' + jd.title + '</p>');
+        //         });
+        //     });
+        // });
+
+
+        // $(document).ready(function() {
+        //     $('#show-nhan-vien').click(function() {
+        //         $.getJSON("https://jsonplaceholder.typicode.com/todos", function(data) {
+        //             var items = [];
+        //             $.each(data, function(key, val) {
+        //                 items.push("<li id='so" + key + "'> user ID :" + val.id + "</li>");
+        //                 items.push("<p id='title' data-id='so" + key + "''>Title : " + val.title + "</p>");
+        //                 items.push("<p id='check' data-id='so" + key + "''>cheked : " + val.completed + "</p>");
+
+        //             });
+
+        //             $("<ul/>", {
+        //                 "class": "my-new-list",
+        //                 html: items.join("")
+        //             }).appendTo("body");
+        //             $('li').click(function(event) {
+        //                 var clicked = event.currentTarget.id;
+        //                 $('#title[data-id= "' + clicked + '" ]').css('text-decoration-line', 'line-through')
+        //                 $('#check[data-id= "' + clicked + '" ]').text('check:True')
+
+        //             });
+        //             $('li').dblclick(function(event) {
+        //                 var clicked = event.currentTarget.id;
+        //                 $('#title[data-id= "' + clicked + '" ]').css('text-decoration-line', 'none')
+        //                 $('#check[data-id= "' + clicked + '" ]').text('check : false')
+
+        //             });
+        //         });
+        //     })
+        // })
+
+        $(document).ready(function() {
+            let urls = [
+                'https://jsonplaceholder.typicode.com/posts',
+                'https://jsonplaceholder.typicode.com/comments',
+                'https://jsonplaceholder.typicode.com/albums',
+                'https://jsonplaceholder.typicode.com/photos',
+                'https://jsonplaceholder.typicode.com/todos',
+                'https://jsonplaceholder.typicode.com/users',
+            ];
+
+            function list(res, className, prop) {
+                for (i = 0; i <= res.length; i++) {
+                    x = res[i]
+                    $(className).append('<li  >' + x[prop] + '</li>')
+                }
+            }
+
+            let requests = urls.map(url => fetch(url));
+            let arrRes = [];
+            Promise.all(requests)
+                .then(responses => {
+
+                    var mapResponses = responses.map(r => r.json());
+                    debugger;
+                    mapResponses.forEach((value, index) => {
+                        var ind = index
+                        value.then((res) => {
+                            arrRes[ind] = res;
+                            let x = []
+                            switch (ind) {
+
+                                case 0:
+                                    list(res, '.post', 'body')
+                                    break;
+                                case 1:
+                                    list(res, '.cmt', 'email')
+                                    break;
+                                case 2:
+                                    list(res, '.album', 'title')
+                                    break;
+                                case 3:
+                                    list(res, '.photo', 'title')
+                                    break
+                                case 4:
+                                    list(res, '.todo', 'completed')
+                                    break;
+                                case 5:
+                                    list(res, '.user', 'name')
+                                    break;
+
+                            }
+
+                        });
+
+
+                    })
+
+
+                    // for (let i = 0; i < responses.length; i++) {
+                    //     const response = responses[i];
+                    //     debugger;
+                    //     // const mapRes = mapUrls[i].url;
+                    //     switch (mapUrls[response.url]) {
+                    //         case 'Posts':
+                    //             $.each(function(val) {
+                    //                 $('.post').append("<li'> user ID :" + val.body + "</li>")
+                    //             });
+                    //             break;
+                    //             // case 'Posts':
+                    //             // $.each(data, function(key, val) {
+                    //             //         $().append("<li id='so" + key + "'> user ID :" + val.body + "</li>")  
+                    //             //     });
+                    //             // break;
+                    //             // case 'Posts':
+                    //             // $.each(data, function(key, val) {
+                    //             //         $().append("<li id='so" + key + "'> user ID :" + val.body + "</li>")  
+                    //             //     });
+                    //             // break;
+                    //             // case 'Posts':
+                    //             // $.each(data, function(key, val) {
+                    //             //         $().append("<li id='so" + key + "'> user ID :" + val.body + "</li>")  
+                    //             //     });
+                    //             // break;
+                    //             // case 'Posts':
+                    //             // $.each(data, function(key, val) {
+                    //             //         $().append("<li id='so" + key + "'> user ID :" + val.body + "</li>")  
+                    //             //     });
+                    //             // break;
+                    //             // case 'Posts':
+                    //             // $.each(data, function(key, val) {
+                    //             //         $().append("<li id='so" + key + "'> user ID :" + val.body + "</li>")  
+                    //             //     });
+                    //             // break;
+                    //     }
+                    // }
+                })
+
+
+        })
+    </script>
+</body>
+
+</html>
